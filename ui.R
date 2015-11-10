@@ -10,21 +10,23 @@ shinyUI(fluidPage(
   # number of observations to view
   sidebarLayout(
     sidebarPanel(
-      selectInput("dataset", "Choose a dataset (or a subset):", 
+      selectInput("dataset", "Choose a dataset (or a subset) :", 
                   choices = c("all iris data", "setosa", "versicolor", "virginica")),
-      
+      selectInput("Xvar", "X variable", 
+                  choices = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")),
+      selectInput("Yvar", "Y variable", 
+                  choices = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")),
       numericInput("obs", "Number of observations to view on table:", 10)
     ),
     
     # Show a summary of the dataset and an HTML table with the 
     # requested number of observations
     mainPanel(
-      h1("Plot"),
-      plotOutput("plot"),
-      h1("Descriptive statistics"),
-      verbatimTextOutput("summary"),
-      h1("Table"),
-      tableOutput("view")
+      tabsetPanel(
+        tabPanel("Plot", h1("Plot"),plotOutput("plot")),
+        tabPanel("Descriptive statistics", h1("Descriptive statistics"),verbatimTextOutput("summary")),
+        tabPanel("Table", h1("Table"),tableOutput("view"))
+      ) 
     )
   )
 ))
