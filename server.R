@@ -3,8 +3,8 @@ library(ggplot2)
 library(datasets)
 
 # Define colors
-palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
-          "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
+palette(c("#E73032", "#377EB8", "#4DAF4A", "#984EA3",
+          "#FF7F00", "#FFDD33", "#A65628", "#F781BF", "#999999"))
 
 # Define server logic required to summarize and view the selected
 # dataset
@@ -56,6 +56,9 @@ shinyServer(function(input, output) {
   output$view <- renderTable({
     head(datasetInput(), n = input$obs)
   })
+  output$NbRows <- renderText({ 
+    paste("You have selected to show ", input$obs," lines.")
+  })
   
   
   # Show a simple x,y plot
@@ -68,9 +71,24 @@ shinyServer(function(input, output) {
                 ifelse(df_iris$Species == "versicolor", palette()[2], palette()[3])) )
     
     legend("bottomright", legend = unique(df_iris[,5]), 
-           col = myColors(),
+           col = myColors(), title = expression(bold("Iris.Species")),
            pch = 16, bty = "n", pt.cex = 2, 
-           cex = 0.8, text.col = "black", horiz = FALSE, inset = c(0.1, 0.1))
+           cex = 0.8, text.col = "black", horiz = FALSE, inset = c(0.05, 0.05))
+  })
+  
+  # Show boxplot
+  output$boxPlot <- renderPlot({
+    df_iris <- datasetInput()
+    
+    if (input$dataset == "all iris data") {
+      boxplot(df_iris[,c(input$Yvar)] ~ df_iris[,5], xlab = "Species", ylab = input$Yvar, main = "IRIS", 
+              border = "black", col = myColors())
+    }
+    else {
+      boxplot(df_iris[,c(input$Yvar)], xlab = "Species", ylab = input$Yvar, main = toupper(input$dataset),
+              border = "black", col = myColors())
+    }
+    
   })
   
   ## K-Means Plot
@@ -79,6 +97,9 @@ shinyServer(function(input, output) {
          col = clusters()$cluster,
          pch = 20, cex = 2)
     points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
+  })
+  output$NbClust <- renderText({ 
+    paste("K-means clustering performed with ", input$clusters," clusters.")
   })
   
 })
