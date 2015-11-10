@@ -15,7 +15,8 @@ shinyUI(fluidPage(
       selectInput("Xvar", "X variable", 
                   choices = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")),
       selectInput("Yvar", "Y variable", 
-                  choices = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")),
+                  choices = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"), selected = "Sepal.Width"),
+      numericInput("clusters", "Cluster count", 3, min = 1, max = 9),
       numericInput("obs", "Number of observations to view on table:", 10)
     ),
     
@@ -23,9 +24,10 @@ shinyUI(fluidPage(
     # requested number of observations
     mainPanel(
       tabsetPanel(
-        tabPanel("Plot", h1("Plot"),plotOutput("plot")),
+        tabPanel("Plot", h1("Plot"),plotOutput("simplePlot")),
         tabPanel("Descriptive statistics", h1("Descriptive statistics"),verbatimTextOutput("summary")),
-        tabPanel("Table", h1("Table"),tableOutput("view"))
+        tabPanel("Table", h1("Table"),tableOutput("view")),
+        tabPanel("Clustering", h1("K-Means"),plotOutput("kmeansPlot"))
       ) 
     )
   )
