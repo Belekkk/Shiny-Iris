@@ -17,4 +17,4 @@ The `server.R` script contains the instructions that your computer needs to buil
 
 # Launch the app 
 
-You can launch the app by running `runGitHub("Shiny-Iris", "belekkk")` on R Console or by [direct link](https://axelbellec.shinyapps.io/Shiny-Iris).
+You can launch the app by running `runGitHub("Shiny-Iris", "belekkk")` on R Console or by [direct link](http://iris.axelbellec.fr/).
