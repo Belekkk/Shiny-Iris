@@ -1,13 +1,15 @@
 library(shiny)
-library(ggplot2)
+# Other useful packages
 library(datasets)
+library(rpart)
+library(party)
+library(fpc)
 
 # Define colors
 palette(c("#E73032", "#377EB8", "#4DAF4A", "#984EA3",
           "#FF7F00", "#FFDD33", "#A65628", "#F781BF", "#999999"))
 
-# Define server logic required to summarize and view the selected
-# dataset
+# Define server logic 
 shinyServer(function(input, output) {
   
   datasetInput <- reactive({
@@ -88,18 +90,46 @@ shinyServer(function(input, output) {
       boxplot(df_iris[,c(input$Yvar)], xlab = "Species", ylab = input$Yvar, main = toupper(input$dataset),
               border = "black", col = myColors())
     }
-    
   })
   
-  ## K-Means Plot
+  # K-Means Plot
+  output$NbClust <- renderText({ 
+    paste("K-means clustering performed with ", input$clusters," clusters.")
+  })
   output$kmeansPlot <- renderPlot({
     plot(iris[,c(input$Xvar,input$Yvar)],
          col = clusters()$cluster,
          pch = 20, cex = 2)
     points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
+    legend("bottomright", legend = unique(clusters()$cluster), 
+           col = c(palette()[1],palette()[2],palette()[3]), title = expression(bold("Clusters")),
+           pch = 16, bty = "n", pt.cex = 2, 
+           cex = 0.8, text.col = "black", horiz = FALSE, inset = c(0.05, 0.05))
   })
-  output$NbClust <- renderText({ 
-    paste("K-means clustering performed with ", input$clusters," clusters.")
+  
+  # Density-based cluster
+  output$dbscan_Param <- renderText({ 
+    paste("DBSCAN clustering performed with eps = ", input$eps," and minPts = ", input$minPoints,".")
   })
+  output$dbscanPlot <- renderPlot({
+    cluster <- dbscan(iris[,-5], eps = input$eps, MinPts = input$minPoints)
+    plot(cluster, iris[,c(input$Xvar, input$Yvar)])
+  })
+  
+  # Decision Tree
+  output$treePlot <- renderPlot({
+    ctree <- ctree(Species ~ ., data = iris)
+    plot(ctree, type="simple")
+  })
+  
+  # Create a .csv file with dataframe inside
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste('data-Iris-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(con) {
+      write.csv(iris, con)
+    }
+    )
   
 })
