@@ -101,10 +101,6 @@ shinyServer(function(input, output) {
          col = clusters()$cluster,
          pch = 20, cex = 2)
     points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
-    legend("bottomright", legend = unique(clusters()$cluster), 
-           col = c(palette()[1],palette()[2],palette()[3]), title = expression(bold("Clusters")),
-           pch = 16, bty = "n", pt.cex = 2, 
-           cex = 0.8, text.col = "black", horiz = FALSE, inset = c(0.05, 0.05))
   })
   
   # Density-based cluster
