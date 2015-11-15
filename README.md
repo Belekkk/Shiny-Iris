@@ -18,3 +18,7 @@ The `server.R` script contains the instructions that your computer needs to buil
 # Launch the app 
 
 You can launch the app by running `runGitHub("Shiny-Iris", "belekkk")` on R Console or by [direct link](http://iris.axelbellec.fr/).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Belekkk/shiny-iris/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
